@@ -1,5 +1,9 @@
-export const a = 111
-debugger
-console.log(a)
+import { initMixin } from './init'
 
-export default {a:1}
+function Vue(options) {
+    this._init(options)
+}
+
+initMixin(Vue)
+
+export default Vue

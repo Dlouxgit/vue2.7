@@ -6,7 +6,7 @@ export default {
         file: './dist/vue.js',
         name: 'Vue',
         format: 'umd', // esm commonjs iife umd (兼容 commonjs amd)
-        // sourcemap: true
+        sourcemap: true
     },
     plugins: [
         babel({
