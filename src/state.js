@@ -20,12 +20,11 @@ function proxy(vm, target, key) {
 
 function initData(vm) {
     let data = vm.$options.data
-    debugger
     data = typeof data === 'function' ? data.call(vm) : data
-    
+
     vm._data = data
 
-    
+
     observe(data)
 
     for (let key in data) {
