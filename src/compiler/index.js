@@ -34,7 +34,8 @@ function gen(node) {
                 if (index > lastIndex) {
                     tokens.push(`${JSON.stringify(text.slice(lastIndex, index))}`)
                 }
-                tokens.push(`_s(${match[1].trim()})`)
+                // 如果 mustache 语法中的属性在 data 中未定义， with 会报错，因此加上 this
+                tokens.push(`_s(this.${match[1].trim()})`)
                 lastIndex = index + match[0].length
             }
             if (lastIndex < text.length) {
@@ -56,17 +57,18 @@ function genChildren(children) {
 
 function codegen(ast) {
     let children = genChildren(ast.children)
-    let code = `
-    _c(
+    let code = `_c(
         '${ast.tag}', 
         ${ast.attrs.length ? genProps(ast.attrs) : null}${
             ast.children.length ? `,${children}` : ''
         })`
-    console.log(code)
     return code
 }
 
 export function compileToFunction(template) {
     let ast = parseHTML(template)
-    codegen(ast)
+    let code = codegen(ast)
+    code = `with(this) {return ${code}}`
+    let render = new Function(code)
+    return render
 }
