@@ -5,11 +5,12 @@ const startTagOpen = new RegExp(`^<${qnameCapture}`)
 const startTagClose = /^\s*(\/?)>/
 const endTag = new RegExp(`^<\\/${qnameCapture}[^>]*>`)
 
+export const TYPE_MAP = {
+    ELEMENT_TYPE: 1,
+    TEXT_TYPE: 3
+}
+
 export function parseHTML(html) {
-    const TYPE_MAP = {
-        ELEMENT_TYPE: 1,
-        TEXT_TYPE: 3
-    }
     const stack = []
     let currentParent
     let root
