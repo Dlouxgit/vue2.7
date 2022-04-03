@@ -1,3 +1,4 @@
+import Watcher from "./observe/watcher"
 import { createEleVNode, createTextVNode } from "./vdom"
 import { patch } from "./vdom/patch"
 
@@ -30,5 +31,7 @@ export function initLifeCycle(Vue) {
 
 export function mountComponent(vm, el) {
     vm.$el = el
-    vm._update(vm._render())
+    new Watcher(vm, () => {
+        vm._update(vm._render())
+    }, true)
 }
