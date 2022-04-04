@@ -35,3 +35,10 @@ export function mountComponent(vm, el) {
         vm._update(vm._render())
     }, true)
 }
+
+export function callHook(vm, hook) {
+    const handlers = vm.$options[hook]
+    if (handlers) {
+        handlers.forEach(handle => handle.call(vm))
+    }
+}
