@@ -19,6 +19,9 @@ export default class Watcher {
     }
     update() {
         console.log('update')
+        queueWatcher(this)
+    }
+    run() {
         this.get()
     }
     addDep(dep) {
@@ -27,5 +30,72 @@ export default class Watcher {
             this.deps.push(dep)
             dep.addSub(this)
         }
+    }
+}
+
+let queue = []
+let has = {}
+let pending = false
+
+function flushSchedulerQueue() {
+    const flushQueue = queue.slice()
+    queue = []
+    pending = false
+    has = {}
+    flushQueue.forEach(q => q.run())
+}
+
+function queueWatcher(watcher) {
+    const id = watcher.id
+    if (!has[id]) {
+        has[id] = id
+        queue.push(watcher)
+        if (!pending) {
+            nextTick(flushSchedulerQueue)
+            pending = true
+        }
+    }
+}
+
+let callbacks = []
+let waiting = false
+
+function flushCallback() {
+    let cbs = callbacks.slice()
+    waiting = false
+    callbacks = []
+    cbs.forEach(cb => cb())
+}
+
+let timerFunc
+if (Promise) {
+    timerFunc = () => {
+        Promise.resolve().then(flushCallback)
+    }
+} else if (MutationObserver) {
+    const observer = new MutationObserver(flushCallback)
+    let count = 0
+    const textNode = document.createTextNode(count)
+    observer.observe(textNode, {
+        characterData: true
+    })
+    timerFunc = () => {
+        textNode.textContent = count++
+    }
+} else if (setImmediate) {
+    timerFunc = () => {
+        setImmediate(flushCallback)
+    }
+} else if (setTimeout) {
+    timerFunc = () => {
+        setTimeout(flushCallback)
+    }
+}
+
+export function nextTick(cb) {
+    callbacks.push(cb)
+    if (!waiting) {
+        timerFunc()
+        waiting = true
     }
 }

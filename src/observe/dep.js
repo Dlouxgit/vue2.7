@@ -10,7 +10,6 @@ export default class Dep {
         Dep.target && Dep.target.addDep(this)
     }
     notify() {
-        debugger
         this.subs.forEach(sub => sub.update())
     }
     addSub(watcher) {
