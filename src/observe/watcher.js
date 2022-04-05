@@ -4,16 +4,24 @@ import { queueWatcher } from "./schedule"
 let id = 0
 
 export default class Watcher {
-    constructor(vm, fn, options, isRenderWatcher) {
+    constructor(vm, exprOrFn, options, cb, isRenderWatcher) {
         this.id = id++
         this.vm = vm
-        this.getter = fn
+        if (typeof exprOrFn === 'string') {
+            this.getter = function () {
+                return vm[exprOrFn]
+            }
+        } else {
+            this.getter = exprOrFn
+        }
         this.depIds = new Set()
         this.deps = []
+        this.cb = cb
         this.lazy = options.lazy
         this.dirty = this.lazy
+        this.user = options.user
 
-        this.lazy ? undefined : this.get()
+        this.value = this.lazy ? undefined : this.get()
     }
     depend() {
         let i = this.deps.length
@@ -40,7 +48,12 @@ export default class Watcher {
         console.log('update')
     }
     run() {
-        this.get()
+        const oldValue = this.value
+        const newValue = this.get()
+
+        if (this.user) {
+            this.cb.call(this.vm, newValue, oldValue)
+        }
     }
     addDep(dep) {
         if (!this.depIds.has(dep.id)) {

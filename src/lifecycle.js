@@ -33,7 +33,7 @@ export function mountComponent(vm, el) {
     vm.$el = el
     new Watcher(vm, () => {
         vm._update(vm._render())
-    }, true)
+    }, {}, null, true /* isRenderWatcher */)
 }
 
 export function callHook(vm, hook) {
