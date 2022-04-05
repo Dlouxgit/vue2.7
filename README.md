@@ -4,7 +4,7 @@ Vue2 核心功能 demo
 
 ## 做了什么
 0. 通过 mixin 创建 vm.options (存在用户调用 mixin 传入的参数) 与 vm.$options (存在用户新建实例时传入的参数) 
-1. 创造了响应式数据，初始化计算属性
+1. 创造了响应式数据，初始化计算属性，初始化 watch
 2. 模板转换成 ast 语法树
 3. ast语法树转成 render 函数
 4. 数据更新就执行 render 函数，因为动态的{{}}内容已经使用 _s 来处理，无需再次处理 ast
@@ -19,3 +19,4 @@ Vue2 核心功能 demo
 - 增加 Dep 与 Watcher，完成观察者模式
 - 增加 mixin 与 lifecycle
 - 增加计算属性 computed 实现
+- 增加 watch 与 $watch 实现
