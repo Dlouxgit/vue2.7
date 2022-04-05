@@ -1,4 +1,4 @@
-import { mergeOptions } from "../utils"
+import { mergeOptions } from "../util"
 
 export function initGlobalAPI(Vue) {
   Vue.options = {}
