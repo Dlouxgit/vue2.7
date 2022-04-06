@@ -2,6 +2,7 @@ import { newArrayProto } from './array'
 import Dep from './dep'
 class Observer {
     constructor(data) {
+        this.dep = new Dep()
         Object.defineProperty(data, '__ob__', {
             value: this,
             enumerable: false
@@ -24,14 +25,32 @@ class Observer {
     }
 }
 
+function dependArray(value) {
+    for (let i = 0; i < value.length; i++) {
+        const current = value[i]
+        // 可能不是对象因此没有 __ob__
+        current.__ob__ && current.__ob__.dep.depend()
+        if (Array.isArray(current)) {
+            dependArray(current)
+        }
+    }
+}
+
 export function defineReactive(data, target, value) {
     // 如果是对象，递归
-    observe(value)
+    const childOb = observe(value)
     let dep = new Dep()
 
     Object.defineProperty(data, target, {
         get() {
             dep.depend()
+            if (childOb) {
+                childOb.dep.depend()
+
+                if (Array.isArray(value)) {
+                    dependArray(value)
+                }
+            }
             return value
         },
         set(newValue) {

@@ -23,7 +23,7 @@ export function initLifeCycle(Vue) {
     Vue.prototype._s = function(value) {
         if (value == null)
             return ''
-        if (typeof value === 'object')
+        if (typeof value !== 'object')
             return value
         return JSON.stringify(value)
     }

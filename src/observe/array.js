@@ -28,7 +28,8 @@ methods.forEach(method => {
                 break
         }
         inserted && ob.observeArray(inserted)
-
+        debugger
+        ob.dep.notify()
         return result
     }
 })

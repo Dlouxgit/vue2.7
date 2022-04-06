@@ -12,7 +12,7 @@ Vue2 核心功能 demo
 6. watcher 回调中使用 update 挂载，第一次是同步渲染，更新流程会加入队列，之后使用 nextTick 进行异步渲染
 7. 挂载中使用的数据会被 Dep 实例进行依赖收集
 
-更新顺序
+代码更新顺序
 - 创造响应式数据，数据劫持，定义 defineProperty
 - 模板转换 ast，ast 转换 render
 - 使用 update 挂载 el
@@ -20,3 +20,4 @@ Vue2 核心功能 demo
 - 增加 mixin 与 lifecycle
 - 增加计算属性 computed 实现
 - 增加 watch 与 $watch 实现
+- 增加数组新增数据触发视图响应式 data 上挂载的属性确实被监听了，但这个对象本身并没有，只是响应式里面的每个键
