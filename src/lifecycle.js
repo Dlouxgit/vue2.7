@@ -6,7 +6,13 @@ export function initLifeCycle(Vue) {
     Vue.prototype._update = function(vnode) {
         const vm = this
         const el = vm.$el
-        vm.$el = patch(el, vnode)
+        const preVnode = vm._vnode
+        vm._vnode = vnode
+        if (preVnode) {
+            vm.$el = patch(preVnode, vnode)
+        } else {
+            vm.$el = patch(el, vnode)
+        }
         console.log(vnode)
     }
     Vue.prototype._render = function() {
